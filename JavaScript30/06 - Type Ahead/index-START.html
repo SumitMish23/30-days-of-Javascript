@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions"></ul>
+    </form>
+    <script>
+      const endpoint =
+        "https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json";
+      function fetchCityAndState() {
+        try {
+          // debugger;
+          fetch(endpoint)
+            .then((response) => {
+              if (response.ok) {
+                // throw new Error("Something went wrong");
+                return response.json();
+              }
+            })
+            .then((data) => {
+              showSearchResults(data);
+            })
+            .catch((error) => {
+              console.warn("Error fetching data:", error);
+            });
+        } catch (error) {
+          console.info("err",error);
+        }
+      }
+      function showSearchResults(cityData) {
+        if (!cityData) {
+          alert(" Not Able To Get Data For City And State ! ");
+          return;
+        }
+        const cityStateArray = cityData;
+        const suggestionsDiv = document.querySelectorAll(".suggestions")[0];
+        document
+          .getElementsByTagName("input")[0]
+          .addEventListener("input", (e) => {
+            suggestionsDiv.innerHTML = "";
+            const inputStr = e.target.value.toLowerCase();
+            if (!inputStr) {
+              return;
+            }
+
+            const filteredData = cityStateArray.filter((city) => {
+             
+              return city.city.toLowerCase().includes(inputStr);
+            });
+
+            filteredData.map((city) => {
+              let cityItem = document.createElement("li");
+              cityItem.innerHTML = city.city.toLowerCase().replace(
+                inputStr,
+                `<span class="hl">${inputStr}</span>`
+              );
+              suggestionsDiv.append(cityItem);
+            });
+          });
+      }
+
+      fetchCityAndState();
+    </script>
+  </body>
+</html>

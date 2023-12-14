@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS Drum Kit</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <div class="keys">
+      <div data-key="65" data-index="0" class="key" tabindex="0">
+        <kbd>A</kbd>
+        <span class="sound">clap</span>
+      </div>
+      <div data-key="83" data-index="1" class="key">
+        <kbd>S</kbd>
+        <span class="sound">hihat</span>
+      </div>
+      <div data-key="68" data-index="2" class="key">
+        <kbd>D</kbd>
+        <span class="sound">kick</span>
+      </div>
+      <div data-key="70" data-index="3" class="key">
+        <kbd>F</kbd>
+        <span class="sound">openhat</span>
+      </div>
+      <div data-key="71" data-index="4" class="key">
+        <kbd>G</kbd>
+        <span class="sound">boom</span>
+      </div>
+      <div data-key="72" data-index="5" class="key">
+        <kbd>H</kbd>
+        <span class="sound">ride</span>
+      </div>
+      <div data-key="74" data-index="6" class="key">
+        <kbd>J</kbd>
+        <span class="sound">snare</span>
+      </div>
+      <div data-key="75" data-index="7" class="key">
+        <kbd>K</kbd>
+        <span class="sound">tom</span>
+      </div>
+      <div data-key="76" data-index="8" class="key">
+        <kbd>L</kbd>
+        <span class="sound">tink</span>
+      </div>
+    </div>
+
+    <audio data-key="65" src="sounds/clap.wav"></audio>
+    <audio data-key="83" src="sounds/hihat.wav"></audio>
+    <audio data-key="68" src="sounds/kick.wav"></audio>
+    <audio data-key="70" src="sounds/openhat.wav"></audio>
+    <audio data-key="71" src="sounds/boom.wav"></audio>
+    <audio data-key="72" src="sounds/ride.wav"></audio>
+    <audio data-key="74" src="sounds/snare.wav"></audio>
+    <audio data-key="75" src="sounds/tom.wav"></audio>
+    <audio data-key="76" src="sounds/tink.wav"></audio>
+
+    <script>
+      // const keysParentElement = document.getElementsByClassName("keys")[0];
+      const keysElements = document.getElementsByClassName("key");
+      let prevKeyClickedIndex = "0";
+      let currentClickedIndex = "-1";
+      function removeClassByDefault(flag = 0) {
+        if (flag) {
+          keysElements[prevKeyClickedIndex].classList.remove("playing");
+          return;
+        } else {
+          keysElements[currentClickedIndex].classList.remove("playing");
+        }
+      }
+      document.addEventListener("keydown", (e) => {
+        const keyCode = e.keyCode;
+        let currentKeyboardIndex = "0";
+        //apply class
+        let clickedElement = document.querySelector(
+          '.key[data-key="' + keyCode + '"]'
+        );
+        console.log("prev=", prevKeyClickedIndex);
+        removeClassByDefault(1, prevKeyClickedIndex);
+        if (clickedElement) {
+          currentClickedIndex = clickedElement.getAttribute("data-index");
+          prevKeyClickedIndex = currentClickedIndex;
+
+          clickedElement.classList.add("playing");
+        }
+
+        // play audio
+        let audioElement = document.querySelector(
+          'audio[data-key="' + keyCode + '"]'
+        );
+        if (audioElement) {
+          audioElement.currentTime = 0;
+          audioElement.play();
+        }
+
+        setTimeout(() => {
+          removeClassByDefault();
+        }, 100);
+      });
+    </script>
+  </body>
+</html>
+<!-- keydown not working on specific class -->
+<!-- handling of callbacks when audio elemnet is played -->
